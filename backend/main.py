@@ -21,6 +21,7 @@ from app.api.profiles import router as profiles_router
 from app.api.lessons import router as lessons_router
 from app.api.news import router as news_router
 from app.api.partners import router as partners_router
+from app.api.users import router as users_router
 from app.websocket.endpoint import websocket_endpoint
 
 settings = get_settings()
@@ -46,6 +47,7 @@ app.add_middleware(
 )
 
 # Incluir rotas da API
+app.include_router(users_router)
 app.include_router(subjects_router)
 app.include_router(profiles_router)
 app.include_router(lessons_router)
