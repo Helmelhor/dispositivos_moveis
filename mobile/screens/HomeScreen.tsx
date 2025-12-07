@@ -1,6 +1,4 @@
-// app/(tabs)/index.tsx
-// Este arquivo exporta a HomeScreen real do EducaConecta
-
+// screens/HomeScreen.tsx
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -16,10 +14,12 @@ import { Card, Loading } from '@/components/ui';
 import { useAuth } from '@/contexts/AuthContext';
 import apiService from '@/services/api';
 import { News, Subject } from '@/types';
-import { useRouter } from 'expo-router';
 
-export default function HomeScreen() {
-  const router = useRouter();
+interface HomeScreenProps {
+  navigation: any;
+}
+
+export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const { state } = useAuth();
   const [news, setNews] = useState<News[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -34,7 +34,7 @@ export default function HomeScreen() {
         apiService.getSubjects(),
       ]);
       setNews(newsData);
-      setSubjects(subjectsData.slice(0, 6));
+      setSubjects(subjectsData.slice(0, 6)); // Mostrar apenas 6 disciplinas
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
     } finally {
@@ -68,12 +68,12 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <View>
           <Text style={styles.greeting}>
-            Olá, {state.user?.name?.split(' ')[0] || 'Visitante'}! 👋
+            Olá, {state.user?.name?.split(' ')[0]}! 👋
           </Text>
           <Text style={styles.subgreeting}>Bem-vindo ao EducaConecta</Text>
         </View>
         <TouchableOpacity
-          onPress={() => router.push('/profile' as any)}
+          onPress={() => navigation?.navigate('Profile')}
           style={styles.profileButton}
         >
           <MaterialIcons name="account-circle" size={40} color="#0A66C2" />
@@ -82,10 +82,7 @@ export default function HomeScreen() {
 
       {/* Quick Actions */}
       <View style={styles.quickActions}>
-        <TouchableOpacity 
-          style={styles.actionCard}
-          onPress={() => router.push('/explore' as any)}
-        >
+        <TouchableOpacity style={styles.actionCard}>
           <MaterialIcons name="search" size={24} color="#0A66C2" />
           <Text style={styles.actionText}>Buscar</Text>
         </TouchableOpacity>
@@ -106,8 +103,8 @@ export default function HomeScreen() {
       {/* Featured Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>📰 Notícias e Eventos</Text>
-          <TouchableOpacity onPress={() => router.push('/news' as any)}>
+          <Text style={styles.sectionTitle}>Notícias e Eventos</Text>
+          <TouchableOpacity onPress={() => navigation?.navigate('News')}>
             <Text style={styles.seeAll}>Ver todas</Text>
           </TouchableOpacity>
         </View>
@@ -118,7 +115,10 @@ export default function HomeScreen() {
             keyExtractor={(item) => item.id.toString()}
             scrollEnabled={false}
             renderItem={({ item }) => (
-              <TouchableOpacity style={styles.newsCard}>
+              <TouchableOpacity
+                style={styles.newsCard}
+                onPress={() => navigation?.navigate('NewsDetail', { newsId: item.id })}
+              >
                 <View style={styles.newsTypeBadge}>
                   <Text style={styles.newsTypeText}>
                     {item.news_type === 'event' && '📅'}
@@ -146,8 +146,8 @@ export default function HomeScreen() {
       {/* Subjects Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>📚 Disciplinas Populares</Text>
-          <TouchableOpacity onPress={() => router.push('/explore' as any)}>
+          <Text style={styles.sectionTitle}>Disciplinas Populares</Text>
+          <TouchableOpacity onPress={() => navigation?.navigate('Subjects')}>
             <Text style={styles.seeAll}>Ver todas</Text>
           </TouchableOpacity>
         </View>
@@ -158,8 +158,11 @@ export default function HomeScreen() {
               <TouchableOpacity
                 key={subject.id}
                 style={styles.subjectCard}
+                onPress={() =>
+                  navigation?.navigate('SubjectDetail', { subjectId: subject.id })
+                }
               >
-                <Text style={styles.subjectIcon}>{subject.icon || '📖'}</Text>
+                <Text style={styles.subjectIcon}>{subject.icon}</Text>
                 <Text style={styles.subjectName}>{subject.name}</Text>
               </TouchableOpacity>
             ))}
@@ -176,13 +179,16 @@ export default function HomeScreen() {
         <Text style={styles.ctaDescription}>
           Ajude a transformar vidas através da educação
         </Text>
-        <TouchableOpacity style={styles.ctaButton}>
+        <TouchableOpacity
+          style={styles.ctaButton}
+          onPress={() => navigation?.navigate('BecomeVolunteer')}
+        >
           <Text style={styles.ctaButtonText}>Começar agora</Text>
         </TouchableOpacity>
       </Card>
     </ScrollView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -195,7 +201,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 20,
-    paddingTop: 50,
     backgroundColor: '#FFF',
     borderBottomWidth: 1,
     borderBottomColor: '#EEE',
@@ -355,13 +360,3 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
-
-/*
-Como usar para outros endpoints:
-- Troque o valor de 'endpoint' para o recurso desejado, ex:
-  const endpoint = '/volunteers';
-  const endpoint = '/news';
-  const endpoint = '/partners';
-- O componente renderiza o campo 'name' se existir, ou o JSON completo do item.
-- Para customizar a exibição, altere o renderItem conforme o modelo retornado pela API.
-*/
