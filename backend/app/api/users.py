@@ -1,22 +1,51 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+import secrets
 from app.database import get_db
 from app.models.user import User
-from app.schemas.user import UserCreate, UserUpdate, UserResponse
+from app.schemas.user import UserCreate, UserUpdate, UserResponse, UserLogin, Token
 
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/login", response_model=Token)
+def login(user_data: UserLogin, db: Session = Depends(get_db)):
+    """
+    Autenticar usuário com email e senha.
+    Retorna token de acesso e dados do usuário.
+    """
+    user = db.query(User).filter(User.email == user_data.email).first()
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Email ou senha incorretos"
+        )
+    
+    # Verificar senha (em texto simples por enquanto)
+    if user.password_hash != user_data.password:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Email ou senha incorretos"
+        )
+    
+    # Gerar token simples
+    token = secrets.token_urlsafe(32)
+    
+    return Token(
+        access_token=token,
+        token_type="bearer",
+        user=UserResponse.model_validate(user)
+    )
+
+
+@router.post("/", response_model=Token, status_code=status.HTTP_201_CREATED)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     """
     Criar novo usuário.
-    
-    Após criar o usuário, use o ID retornado para criar um perfil de:
-    - Voluntário: POST /profiles/volunteers
-    - Aprendiz: POST /profiles/learners
+    Retorna token de acesso e dados do usuário para auto-login.
     """
     # Verificar se email já existe
     existing = db.query(User).filter(User.email == user.email).first()
@@ -32,7 +61,14 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_user)
     
-    return db_user
+    # Gerar token para auto-login
+    token = secrets.token_urlsafe(32)
+    
+    return Token(
+        access_token=token,
+        token_type="bearer",
+        user=UserResponse.model_validate(db_user)
+    )
 
 
 @router.get("/", response_model=List[UserResponse])

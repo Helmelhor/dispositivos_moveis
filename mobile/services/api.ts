@@ -40,7 +40,7 @@ class ApiService {
   // ==================== AUTENTICAÇÃO ====================
   async login(email: string, password: string) {
     try {
-      const response = await this.api.post('/login', { email, password });
+      const response = await this.api.post('/users/login', { email, password });
       return response.data;
     } catch (error) {
       throw this.handleError(error);

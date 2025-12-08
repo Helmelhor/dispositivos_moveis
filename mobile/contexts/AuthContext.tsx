@@ -87,28 +87,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
       
-      // TODO: Integrar com endpoint de login da API
-      // Por enquanto, simulando login
-      const userData: User = {
-        id: 1,
-        email,
-        name: 'Usuário Teste',
-        role: 'learner',
-        status: 'active',
-        is_online_available: true,
-        is_presencial_available: false,
-        created_at: new Date().toISOString(),
-      };
-
-      const token = 'mock-token-' + Date.now();
+      // Integrar com endpoint de login da API
+      const response = await apiService.login(email, password);
+      
+      const token = response.access_token;
+      const userData: User = response.user;
       
       await AsyncStorage.setItem('userToken', token);
       apiService.setToken(token);
       
       dispatch({ type: 'SIGN_IN', payload: { token, user: userData } });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao fazer login:', error);
-      throw error;
+      throw new Error(error.message || 'Falha ao fazer login');
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
@@ -118,28 +109,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
       
-      // TODO: Integrar com endpoint de signup da API
-      // Por enquanto, simulando signup
-      const userData: User = {
-        id: 2,
-        email,
-        name,
-        role,
-        status: 'pending',
-        is_online_available: true,
-        is_presencial_available: false,
-        created_at: new Date().toISOString(),
-      };
-
-      const token = 'mock-token-' + Date.now();
+      // Integrar com endpoint de signup da API
+      const response = await apiService.signup({ email, password, name, role });
+      
+      const token = response.access_token;
+      const userData: User = response.user;
       
       await AsyncStorage.setItem('userToken', token);
       apiService.setToken(token);
       
       dispatch({ type: 'SIGN_UP', payload: { token, user: userData } });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao fazer signup:', error);
-      throw error;
+      throw new Error(error.message || 'Falha ao criar conta');
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
