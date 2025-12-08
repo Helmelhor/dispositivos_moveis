@@ -170,16 +170,18 @@ export default function HomeScreen() {
       </View>
 
       {/* Call to Action */}
-      <Card style={styles.ctaCard}>
-        <MaterialIcons name="volunteer-activism" size={40} color="#0A66C2" />
-        <Text style={styles.ctaTitle}>Quero ser voluntário!</Text>
-        <Text style={styles.ctaDescription}>
-          Ajude a transformar vidas através da educação
-        </Text>
-        <TouchableOpacity style={styles.ctaButton}>
-          <Text style={styles.ctaButtonText}>Começar agora</Text>
-        </TouchableOpacity>
-      </Card>
+      {state.user?.role === 'learner' && (
+        <Card style={styles.ctaCard}>
+          <MaterialIcons name="volunteer-activism" size={40} color="#0A66C2" />
+          <Text style={styles.ctaTitle}>Quero ser voluntário!</Text>
+          <Text style={styles.ctaDescription}>
+            Ajude a transformar vidas através da educação
+          </Text>
+          <TouchableOpacity style={styles.ctaButton} onPress={() => router.push('/signup' as any)}>
+            <Text style={styles.ctaButtonText}>Começar agora</Text>
+          </TouchableOpacity>
+        </Card>
+      )}
     </ScrollView>
   );
 }
