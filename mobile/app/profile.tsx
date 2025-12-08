@@ -37,8 +37,8 @@ export default function ProfileScreen() {
 
   const menuItems = [
     { icon: 'person', label: 'Editar perfil', action: () => { router.push('/editar_perfil') } },
-    { icon: 'notifications', label: 'Notificações', action: () => {} },
-    { icon: 'security', label: 'Privacidade', action: () => {} },
+    { icon: 'notifications', label: 'Notificações', action: () => { Alert.alert('Notificações', 'Aqui você pode gerenciar suas notificações.'); } },
+    { icon: 'security', label: 'Privacidade', action: () => { Alert.alert('Privacidade', 'Aqui você pode gerenciar suas configurações de privacidade.'); } },
     { icon: 'help', label: 'Ajuda', action: () => { Alert.alert('Ajuda', 'Aqui você encontra informações úteis.'); } },
     { icon: 'info', label: 'Sobre', action: () => { Alert.alert('Sobre', 'Um app feito por Helmer Barcelos!'); } },
   ];
