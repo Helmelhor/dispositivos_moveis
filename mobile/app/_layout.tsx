@@ -17,6 +17,9 @@ export default function RootLayout() {
           <Stack.Screen name="login" />
           <Stack.Screen name="signup" />
           <Stack.Screen name="profile" options={{ headerShown: true, title: 'Perfil' }} />
+          <Stack.Screen name="editar_perfil" options={{ headerShown: true, title: 'Editar Perfil' }} />
+          <Stack.Screen name="news" options={{ headerShown: true, title: 'Notícias' }} />
+          <Stack.Screen name="explore" options={{ headerShown: true, title: 'Explorar' }} />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal', headerShown: true }} />
         </Stack>

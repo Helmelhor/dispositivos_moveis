@@ -1,11 +1,11 @@
-// app/news.tsx
+// app/explore.tsx
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function NewsScreen() {
+export default function ExploreScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Notícias</Text>
+      <Text style={styles.text}>Explorar</Text>
     </View>
   );
 }

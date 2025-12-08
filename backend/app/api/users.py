@@ -107,6 +107,24 @@ def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db)):
     if not db_user:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
     
+    # Verificar se email já existe (se está sendo alterado)
+    if user.email:
+        existing_email = db.query(User).filter(
+            User.email == user.email,
+            User.id != user_id  # Excluir o usuário atual
+        ).first()
+        if existing_email:
+            raise HTTPException(status_code=400, detail="Email já cadastrado")
+    
+    # Verificar se nome já existe (se está sendo alterado)
+    if user.name:
+        existing_name = db.query(User).filter(
+            User.name == user.name,
+            User.id != user_id  # Excluir o usuário atual
+        ).first()
+        if existing_name:
+            raise HTTPException(status_code=400, detail="Nome já cadastrado")
+    
     update_data = user.model_dump(exclude_unset=True)
     for field, value in update_data.items():
         setattr(db_user, field, value)

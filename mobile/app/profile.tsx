@@ -36,11 +36,11 @@ export default function ProfileScreen() {
   };
 
   const menuItems = [
-    { icon: 'person', label: 'Editar perfil', action: () => {} },
+    { icon: 'person', label: 'Editar perfil', action: () => { router.push('/editar_perfil') } },
     { icon: 'notifications', label: 'Notificações', action: () => {} },
     { icon: 'security', label: 'Privacidade', action: () => {} },
-    { icon: 'help', label: 'Ajuda', action: () => {} },
-    { icon: 'info', label: 'Sobre', action: () => {} },
+    { icon: 'help', label: 'Ajuda', action: () => { Alert.alert('Ajuda', 'Aqui você encontra informações úteis.'); } },
+    { icon: 'info', label: 'Sobre', action: () => { Alert.alert('Sobre', 'Um app feito por Helmer Barcelos!'); } },
   ];
 
   return (
