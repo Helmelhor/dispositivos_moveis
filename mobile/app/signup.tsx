@@ -113,6 +113,7 @@ export default function SignupScreen() {
             <TextInput
               style={styles.input}
               placeholder="Nome completo"
+              placeholderTextColor={"#000000ff"}
               value={name}
               onChangeText={setName}
               autoCapitalize="words"
@@ -125,6 +126,7 @@ export default function SignupScreen() {
             <TextInput
               style={styles.input}
               placeholder="Email"
+              placeholderTextColor={"#000000ff"}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -139,6 +141,7 @@ export default function SignupScreen() {
             <TextInput
               style={styles.input}
               placeholder="Senha"
+              placeholderTextColor={"#000000ff"}
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
@@ -161,6 +164,7 @@ export default function SignupScreen() {
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               secureTextEntry={!showPassword}
+              placeholderTextColor={"#000000ff"}
             />
           </View>
 
