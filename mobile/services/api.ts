@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { User, News, Subject, PartnerLocation, LoginRequest, SignupRequest } from '@/types';
 
-const API_BASE_URL = 'http://192.168.1.168:8000';
+const API_BASE_URL = 'http://192.168.224.1:8000';
 
 class ApiService {
   private api: any;
@@ -118,6 +118,23 @@ class ApiService {
     try {
       const response = await this.api.get(`/news/${newsId}`);
       return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async createNews(data: { title: string; content: string; news_type: string }): Promise<News> {
+    try {
+      const response = await this.api.post('/news/', data);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async deleteNews(newsId: number): Promise<void> {
+    try {
+      await this.api.delete(`/news/${newsId}`);
     } catch (error) {
       throw this.handleError(error);
     }
