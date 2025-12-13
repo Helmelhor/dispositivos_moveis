@@ -174,7 +174,10 @@ export default function MinistrarAulasScreen() {
       // Atualizar lista de aulas
       await loadPublishedLessons();
     } catch (error: any) {
-      Alert.alert('Erro', error.message || 'Falha ao publicar aula');
+      const errorMessage = typeof error?.message === 'string' 
+        ? error.message 
+        : JSON.stringify(error?.message) || 'Falha ao publicar aula';
+      Alert.alert('Erro', errorMessage);
     } finally {
       setIsLoading(false);
     }

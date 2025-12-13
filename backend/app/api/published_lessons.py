@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile, Form
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime
@@ -42,11 +42,11 @@ def get_current_volunteer(db: Session, user_id: int) -> Volunteer:
 
 @router.post("/", response_model=PublishedLessonResponse, status_code=status.HTTP_201_CREATED)
 async def publish_lesson(
-    subject_id: int,
-    title: str,
-    description: Optional[str] = None,
+    subject_id: int = Form(...),
+    title: str = Form(...),
+    description: Optional[str] = Form(None),
+    volunteer_id: int = Form(...),
     media_file: Optional[UploadFile] = File(None),
-    volunteer_id: int = None,
     db: Session = Depends(get_db)
 ):
     """Voluntário publica uma aula"""
