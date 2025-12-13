@@ -1,5 +1,7 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 from app.config import get_settings
 from app.database import engine, Base
 
@@ -9,6 +11,7 @@ from app.models.volunteer import Volunteer
 from app.models.learner import Learner
 from app.models.subject import Subject
 from app.models.lesson import Lesson
+from app.models.published_lesson import PublishedLesson
 from app.models.course import Course, CourseMaterial, CourseProgress
 from app.models.quiz import Quiz, QuizQuestion, QuizAttempt
 from app.models.gamification import Badge, UserBadge, PointsTransaction
@@ -19,6 +22,7 @@ from app.models.communication import Message, ForumTopic, ForumReply
 from app.api.subjects import router as subjects_router
 from app.api.profiles import router as profiles_router
 from app.api.lessons import router as lessons_router
+from app.api.published_lessons import router as published_lessons_router
 from app.api.news import router as news_router
 from app.api.partners import router as partners_router
 from app.api.users import router as users_router
@@ -46,11 +50,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Servir arquivos estáticos de mídia
+uploads_dir = Path("uploads")
+uploads_dir.mkdir(exist_ok=True)
+if (uploads_dir / "media").exists():
+    app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
 # Incluir rotas da API
 app.include_router(users_router)
 app.include_router(subjects_router)
 app.include_router(profiles_router)
 app.include_router(lessons_router)
+app.include_router(published_lessons_router)
 app.include_router(news_router)
 app.include_router(partners_router)
 
@@ -73,6 +84,7 @@ def read_root():
             "volunteers": "/profiles/volunteers",
             "learners": "/profiles/learners",
             "lessons": "/lessons",
+            "published_lessons": "/published-lessons",
             "news": "/news",
             "partners": "/partners",
             "websocket": "/ws"

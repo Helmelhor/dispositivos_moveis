@@ -159,6 +159,112 @@ class ApiService {
     }
   }
 
+  // ==================== AULAS PUBLICADAS ====================
+  async publishLesson(
+    volunteerId: number,
+    subjectId: number,
+    title: string,
+    description: string,
+    mediaFile?: any
+  ): Promise<any> {
+    try {
+      const formData = new FormData();
+      formData.append('volunteer_id', volunteerId.toString());
+      formData.append('subject_id', subjectId.toString());
+      formData.append('title', title);
+      formData.append('description', description);
+      
+      if (mediaFile) {
+        // Para React Native, o arquivo pode ser um objeto com uri, type e name
+        if (mediaFile.uri) {
+          const filename = mediaFile.name || mediaFile.uri.split('/').pop();
+          formData.append('media_file', {
+            uri: mediaFile.uri,
+            type: mediaFile.type || 'application/octet-stream',
+            name: filename,
+          } as any);
+        } else {
+          // Se for um arquivo de DocumentPicker
+          formData.append('media_file', mediaFile);
+        }
+      }
+
+      const response = await this.api.post('/published-lessons/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getPublishedLessons(
+    volunteerId?: number,
+    subjectId?: number,
+    skip?: number,
+    limit?: number
+  ): Promise<any[]> {
+    try {
+      const response = await this.api.get('/published-lessons/', {
+        params: {
+          volunteer_id: volunteerId,
+          subject_id: subjectId,
+          skip: skip || 0,
+          limit: limit || 50,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getPublishedLesson(lessonId: number): Promise<any> {
+    try {
+      const response = await this.api.get(`/published-lessons/${lessonId}`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async updatePublishedLesson(
+    lessonId: number,
+    volunteerId: number,
+    data: { title?: string; description?: string }
+  ): Promise<any> {
+    try {
+      const response = await this.api.put(
+        `/published-lessons/${lessonId}`,
+        { ...data, volunteer_id: volunteerId }
+      );
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async deletePublishedLesson(lessonId: number, volunteerId: number): Promise<void> {
+    try {
+      await this.api.delete(`/published-lessons/${lessonId}`, {
+        params: { volunteer_id: volunteerId },
+      });
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async likePublishedLesson(lessonId: number): Promise<any> {
+    try {
+      const response = await this.api.post(`/published-lessons/${lessonId}/like`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
   // ==================== HEALTH CHECK ====================
   async healthCheck() {
     try {

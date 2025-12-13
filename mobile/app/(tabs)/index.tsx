@@ -89,10 +89,17 @@ export default function HomeScreen() {
           <MaterialIcons name="search" size={24} color="#0A66C2" />
           <Text style={styles.actionText}>Buscar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionCard}>
-          <MaterialIcons name="calendar-today" size={24} color="#10B981" />
-          <Text style={styles.actionText}>Agendar</Text>
-        </TouchableOpacity>
+        {state.user?.role === 'volunteer' ? (
+          <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/Ministrar_aulas' as any)}>
+            <MaterialIcons name="calendar-today" size={24} color="#10B981" />
+            <Text style={styles.actionText}>Ministrar aulas</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/Ver_aulas' as any)}>
+            <MaterialIcons name="calendar-today" size={24} color="#10B981" />
+            <Text style={styles.actionText}>Ver aulas</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity style={styles.actionCard}>
           <MaterialIcons name="message" size={24} color="#F59E0B" />
           <Text style={styles.actionText}>Mensagens</Text>
@@ -158,6 +165,7 @@ export default function HomeScreen() {
               <TouchableOpacity
                 key={subject.id}
                 style={styles.subjectCard}
+                
               >
                 <Text style={styles.subjectIcon}>{subject.icon || '📖'}</Text>
                 <Text style={styles.subjectName}>{subject.name}</Text>

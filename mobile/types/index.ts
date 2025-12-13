@@ -48,6 +48,20 @@ export interface Subject {
   icon: string;
 }
 
+export interface PublishedLesson {
+  id: number;
+  volunteer_id: number;
+  subject_id: number;
+  title: string;
+  description?: string;
+  media_url?: string;
+  media_type?: string;
+  views_count: number;
+  likes_count: number;
+  created_at: string;
+  updated_at?: string;
+}
+
 export interface News {
   id: number;
   title: string;
