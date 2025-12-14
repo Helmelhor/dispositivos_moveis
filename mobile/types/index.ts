@@ -117,5 +117,47 @@ export interface SignupRequest {
 // - Courses
 // - Quiz e QuizAttempts
 // - Badges e PointsTransaction
-// - Messages e ForumTopics
 // - Agendamento de aulas
+
+// ==================== FÓRUM ====================
+
+export interface ForumTopic {
+  id: number;
+  subject_id: number;
+  user_id: number;
+  title: string;
+  content: string;
+  is_resolved: boolean;
+  views_count: number;
+  replies_count: number;
+  created_at: string;
+  updated_at?: string;
+  author_name: string;
+}
+
+export interface ForumReply {
+  id: number;
+  topic_id: number;
+  user_id: number;
+  content: string;
+  is_accepted: boolean;
+  likes_count: number;
+  created_at: string;
+  updated_at?: string;
+  author_name: string;
+  parent_reply_id?: number;
+}
+
+export interface ForumTopicCreate {
+  subject_id: number;
+  user_id: number;
+  title: string;
+  content: string;
+}
+
+export interface ForumReplyCreate {
+  topic_id: number;
+  user_id: number;
+  content: string;
+  parent_reply_id?: number;
+}

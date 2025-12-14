@@ -29,7 +29,7 @@ class ForumTopicBase(BaseModel):
 
 
 class ForumTopicCreate(ForumTopicBase):
-    pass
+    user_id: int
 
 
 class ForumTopicUpdate(BaseModel):

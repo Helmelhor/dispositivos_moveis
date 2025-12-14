@@ -1,8 +1,8 @@
 // services/api.ts
 import axios from 'axios';
-import { User, News, Subject, PartnerLocation, LoginRequest, SignupRequest } from '@/types';
+import { User, News, Subject, PartnerLocation, LoginRequest, SignupRequest, ForumTopic, ForumReply, ForumTopicCreate, ForumReplyCreate } from '@/types';
 
-const API_BASE_URL = 'http://192.168.224.1:8000';
+const API_BASE_URL = 'http://192.168.1.7:8000';
 
 class ApiService {
   private api: any;
@@ -269,6 +269,123 @@ class ApiService {
   async healthCheck() {
     try {
       const response = await this.api.get('/health');
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  // ==================== FÓRUM ====================
+  async getForumTopics(params?: {
+    subject_id?: number;
+    user_id?: number;
+    is_resolved?: boolean;
+    search?: string;
+    skip?: number;
+    limit?: number;
+  }): Promise<ForumTopic[]> {
+    try {
+      const response = await this.api.get('/forum/topics', { params });
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getForumTopic(topicId: number): Promise<ForumTopic> {
+    try {
+      const response = await this.api.get(`/forum/topics/${topicId}`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async createForumTopic(data: ForumTopicCreate): Promise<ForumTopic> {
+    try {
+      const response = await this.api.post('/forum/topics', data);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async updateForumTopic(topicId: number, userId: number, data: { title?: string; content?: string; is_resolved?: boolean }): Promise<ForumTopic> {
+    try {
+      const response = await this.api.put(`/forum/topics/${topicId}`, data, {
+        params: { user_id: userId }
+      });
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async deleteForumTopic(topicId: number, userId: number): Promise<void> {
+    try {
+      await this.api.delete(`/forum/topics/${topicId}`, {
+        params: { user_id: userId }
+      });
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async getForumReplies(topicId: number, skip?: number, limit?: number): Promise<ForumReply[]> {
+    try {
+      const response = await this.api.get(`/forum/topics/${topicId}/replies`, {
+        params: { skip, limit }
+      });
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async createForumReply(data: ForumReplyCreate): Promise<ForumReply> {
+    try {
+      const response = await this.api.post('/forum/replies', data);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async updateForumReply(replyId: number, userId: number, data: { content?: string }): Promise<ForumReply> {
+    try {
+      const response = await this.api.put(`/forum/replies/${replyId}`, data, {
+        params: { user_id: userId }
+      });
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async deleteForumReply(replyId: number, userId: number): Promise<void> {
+    try {
+      await this.api.delete(`/forum/replies/${replyId}`, {
+        params: { user_id: userId }
+      });
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async likeForumReply(replyId: number): Promise<ForumReply> {
+    try {
+      const response = await this.api.post(`/forum/replies/${replyId}/like`);
+      return response.data;
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
+  async acceptForumReply(replyId: number, userId: number): Promise<ForumReply> {
+    try {
+      const response = await this.api.post(`/forum/replies/${replyId}/accept`, null, {
+        params: { user_id: userId }
+      });
       return response.data;
     } catch (error) {
       throw this.handleError(error);

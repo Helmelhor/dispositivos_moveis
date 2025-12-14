@@ -26,6 +26,7 @@ from app.api.published_lessons import router as published_lessons_router
 from app.api.news import router as news_router
 from app.api.partners import router as partners_router
 from app.api.users import router as users_router
+from app.api.forum import router as forum_router
 from app.websocket.endpoint import websocket_endpoint
 
 settings = get_settings()
@@ -64,6 +65,7 @@ app.include_router(lessons_router)
 app.include_router(published_lessons_router)
 app.include_router(news_router)
 app.include_router(partners_router)
+app.include_router(forum_router)
 
 # Rota WebSocket
 @app.websocket("/ws")

@@ -100,7 +100,7 @@ export default function HomeScreen() {
             <Text style={styles.actionText}>Ver aulas</Text>
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.actionCard}>
+        <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/conversas' as any)}>
           <MaterialIcons name="message" size={24} color="#F59E0B" />
           <Text style={styles.actionText}>Mensagens</Text>
         </TouchableOpacity>
