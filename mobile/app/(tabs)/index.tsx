@@ -104,7 +104,7 @@ export default function HomeScreen() {
           <MaterialIcons name="message" size={24} color="#F59E0B" />
           <Text style={styles.actionText}>Mensagens</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionCard}>
+        <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/pontos' as any)}>
           <MaterialIcons name="star" size={24} color="#EC4899" />
           <Text style={styles.actionText}>Pontos</Text>
         </TouchableOpacity>
